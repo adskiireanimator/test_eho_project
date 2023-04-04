@@ -2,7 +2,7 @@ import axios from "axios";
 
 export default {
   actions: {
-    login({ commit }, user, saveToken) {
+    login({ commit }, user) {
       commit("auth_request");
       let response = {
         success: false,
@@ -10,7 +10,10 @@ export default {
         message: "404",
         errors: ["такой пользователь не найден"],
       };
-      if (user.phone_number == "79999999999" && user.password == "1234567890") {
+      if (
+        user.phone_number == "8 999-999-9999" &&
+        user.password == "1234567890"
+      ) {
         response = {
           success: true,
           token: "sadaksdljaskldjaksdldlksadjaskldjaiwdofqslkafjl",
@@ -33,14 +36,10 @@ export default {
         };
       }
       if (response.success) {
-        if (saveToken) {
-          console.log(41224114);
-          commit("test_status", "работает");
-          localStorage.setItem("token", token);
+        if (user.save_token) {
+          localStorage.setItem("token", response.token);
         }
-        console.log(231231231231231);
         commit("auth_success", response.token, user);
-        commit("test_status", "не работает");
       } else {
         // errors from server handler
       }
@@ -120,13 +119,13 @@ export default {
       state.status = str;
     },
   },
-  getters: {
-    isLoggedIn: (state) => !!state.token,
-    authStatus: (state) => state.status,
-  },
   state: {
     status: "",
     user: {},
     token: localStorage.getItem("token") || "",
+  },
+  getters: {
+    isLoggedIn: (state) => !!state.token,
+    authStatus: (state) => state.status,
   },
 };

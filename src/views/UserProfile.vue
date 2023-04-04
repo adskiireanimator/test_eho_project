@@ -16,11 +16,20 @@
     computed : {
       isLoggedIn(){
          return this.$store.getters.isLoggedIn
-        }
+        },
+      authStatus(){
+        return this.$store.getters.authStatus
+      }
+      
+    
     },
     methods: {
       logout() {
         this.$store.dispatch('logout').then(() => {this.$router.push('/authorization')})
+      },
+
+      fetchData(){
+        this.$store.dispatch('fetchData')
       }
     },
   }

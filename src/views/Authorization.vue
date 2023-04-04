@@ -1,13 +1,13 @@
 <template>
-    <form class="form" v-on:submit.prevent="authorization_handler">
+    <form class="form" v-on:submit.prevent="authorizationHandler">
         <p class="form_text">Авторизация</p>
 
         <div class="spacer"></div>
 
-        <input type="text" class="form_input" placeholder="8 XXX-xxx-xxxx" name="phone" v-model="phone_number">
+        <input type="text" class="form_input" placeholder="8 XXX-xxx-xxxx" name="phone" v-model="phoneNumber">
 
         <input class="form_input" placeholder="Пароль" v-model="password" v-bind:type="passwordFieldType" >
-        <div href="#" class="passwordControl" v-bind:class="{passwordControl_View:passwordIcon}" v-on:click="change_pass_icon"></div>
+        <div href="#" class="passwordControl" v-bind:class="{passwordControl_View:passwordIcon}" v-on:click="changePassIcon"></div>
 
         <label class="form_checkbox_label">
             <input type="checkbox" v-model="saveToken">
@@ -44,37 +44,28 @@ export default {
     data(){
         return{
             password:"",
-            phone_number:localStorage.getItem("phone_number") || "",
+            phoneNumber:localStorage.getItem("phone_number") || "",
             passwordFieldType:'password',
             passwordIcon:false,
             saveToken:true
         }
     },
     methods:{
-        authorization_handler(){
+        authorizationHandler(){
             console.log(this.phone_number);
             let phone_number = this.phone_number
             let password = this.password
-            this.$store.dispatch('login', { phone_number, password },this.saveToken).then(() => this.$router.push('/user_profile')).catch(err => console.log(err))
+            let save_token=this.saveToken
+            console.log(save_token)
+            this.$store.dispatch('login', { phone_number, password,save_token }).then(() => this.$router.push('/user_profile')).catch(err => console.log(err))
         },
-        change_pass_icon(){
+        changePassIcon(){
             this.passwordIcon=!this.passwordIcon;
             this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
         },
-        update_phone_mask(){
-            console.log(25)
-            const x = this.phone_number.replace(/\D/g, "").match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
-
-            if (!x[2] && x[1] !== "") {
-                this.phone_number = x[1] === "8" ? x[1] : "8" + x[1];
-            } else {
-                this.phone_number = !x[3]? x[1] + x[2]: x[1] + "(" + x[2] + ") " + x[3] + (x[4] ? "-" + x[4] : "");
-            }
-        }
     },
     watch:{
-        phone_number(newPhone,oldPhone){
-            console.log(newPhone,"new")
+        phoneNumber(newPhone,oldPhone){
             if(newPhone[0]=='+' && newPhone[1]=='7'){
                 newPhone='8';
             }
@@ -84,19 +75,18 @@ export default {
             
 
             if(x[1]!=''){
-                this.phone_number=`${x[1]}`;
+                this.phoneNumber=`${x[1]}`;
             }
             if(x[2]!=''){
-                this.phone_number=`${x[1]} ${x[2]}`;
+                this.phoneNumber=`${x[1]} ${x[2]}`;
             }
             if(x[3]!=''){
-                this.phone_number=`${x[1]} ${x[2]}-${x[3]}`;
+                this.phoneNumber=`${x[1]} ${x[2]}-${x[3]}`;
             }
             if(x[4]!=''){
-                this.phone_number=`${x[1]} ${x[2]}-${x[3]}-${x[4]}`;
+                this.phoneNumber=`${x[1]} ${x[2]}-${x[3]}-${x[4]}`;
             }
-            console.log(this.phone_number,"super new")
-            localStorage.setItem("phone_number",this.phone_number)
+            localStorage.setItem("phone_number",this.phoneNumber)
             
         },
 
