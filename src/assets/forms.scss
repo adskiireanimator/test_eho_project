@@ -1,14 +1,6 @@
-.passwordControl {
-    margin-left: 80%;
-    display: inline-block;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    background: url("./assets/no-view.svg");
-    &_View {
-        background: url("./assets/view.svg");
-    }
-}
+$color_1: #00b380;
+$background-color_2: #eee;
+$background-color_3: #fff;
 
 .uploader {
     &_wrapper {
@@ -45,6 +37,7 @@
             &_text {
                 line-height: 1;
                 margin-top: 1px;
+                text-align: center;
             }
         }
 
@@ -74,6 +67,18 @@
 
             object-fit: cover;
         }
+    }
+}
+
+.passwordControl {
+    margin-left: 80%;
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    background: url("./assets/no-view.svg");
+    &_View {
+        background: url("./assets/view.svg");
     }
 }
 
@@ -210,12 +215,95 @@
     }
 
     &_link {
+        text-align: center;
         font-size: 1.2rem;
         color: #018962;
+        margin-bottom: 20px;
 
         &:hover {
             cursor: pointer;
             border-bottom: 1px solid #018962;
+        }
+    }
+
+    &_checkbox_label {
+        display: inline-block;
+        position: relative;
+        padding-left: 50px;
+        cursor: pointer;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        &_link {
+            color: $color_1;
+
+            &:hover {
+                cursor: pointer;
+                border-bottom: 1px solid $color_1;
+            }
+        }
+
+        input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+            height: 0;
+            width: 0;
+            &:checked {
+                ~ {
+                    .form_checkbox_checkmark {
+                        background-color: $color_1;
+                        &:after {
+                            left: 21px;
+                        }
+                    }
+                }
+            }
+        }
+        &:hover {
+            input {
+                ~ {
+                    .form_checkbox_checkmark {
+                        background-color: $background-color_2;
+                    }
+                }
+                &:checked {
+                    ~ {
+                        .form_checkbox_checkmark {
+                            background-color: $color_1;
+                        }
+                    }
+                }
+            }
+        }
+        .form_checkbox_checkmark {
+            position: absolute;
+            top: 1px;
+            left: 0;
+            height: 22px;
+            width: 40px;
+            background-color: $background-color_2;
+            transition: background-color 0.25s ease;
+            border-radius: 11px;
+            &:after {
+                content: "";
+                position: absolute;
+                left: 3px;
+                top: 3px;
+                width: 16px;
+                height: 16px;
+                display: block;
+                background-color: $background-color_3;
+                border-radius: 50%;
+                transition: left 0.25s ease;
+            }
+        }
+        .form_checkbox_body {
+            color: #333;
+            line-height: 1.4;
+            font-size: 14px;
+            transition: color 0.25s ease;
         }
     }
 

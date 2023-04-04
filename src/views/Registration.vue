@@ -1,8 +1,8 @@
 <template>
-
     <form class="form" v-on:submit.prevent="register_handler">
         <p class="form_text">Регистрация</p>
-<div class="spacer"></div>
+
+        <div class="spacer"></div>
 
         <input type="text" class="form_input" placeholder="Имя" name="name" v-model="name">
 
@@ -17,14 +17,22 @@
 
         <uploader/>
         
-        
-
         <button type="submit"  class="form_submit_button">Регистрация</button>
+
         <div class="spacer"></div>
+        <div style="width:80%;">
+            <label class="form_checkbox_label">
+                <input type="checkbox">
+                <div class="form_checkbox_checkmark"></div>
+                <div class="form_checkbox_body">Вы соглашаетесь с <a href="/" target="_blank" class="form_checkbox_label_link">условиями конфиденциальности</a></div>
+            </label>
+        </div>
+
+        <div class="spacer"></div>
+
         <router-link to="/authorization">
             <p class="form_link">Уже есть аккаунт? Авторизуйтесь!</p>
         </router-link>
-
 
         <div class="spacer"></div>
         <div class="spacer"></div>
@@ -62,20 +70,13 @@ export default {
             
             this.$store.dispatch('register', data).then(() => this.$router.push('/')).catch(err => console.log(err))
         },
-        update_phone_mask(){
-            console.log(25)
-            const x = this.phone_number.replace(/\D/g, "").match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
-
-            if (!x[2] && x[1] !== "") {
-                this.phone_number = x[1] === "8" ? x[1] : "8" + x[1];
-            } else {
-                this.phone_number = !x[3]? x[1] + x[2]: x[1] + "(" + x[2] + ") " + x[3] + (x[4] ? "-" + x[4] : "");
-            }
-        }
+        
     },
     watch:{
         phone_number(newPhone,oldPhone){
-            
+            if(newPhone[0]=='+' && newPhone[1]=='7'){
+                newPhone='8';
+            }            
             const x = newPhone.replace(/\D/g, "").match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
 
             if(x[1]!=''){

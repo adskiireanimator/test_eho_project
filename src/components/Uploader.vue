@@ -6,7 +6,7 @@
             <span class="uploader_file_icon_wrapper">
                 <img class="uploader_file_icon" src="@/assets/uploader.svg" alt="Выбрать файл" width="25">
             </span>
-            <span class="uploader_file_button_text">Выберите файл</span>
+            <span class="uploader_file_button_text">{{button_name}}</span>
         </label>
     </div>
 </template>
@@ -14,9 +14,20 @@
 <script>
 export default {
   name: 'Uploader',
+  data(){
+    return{
+        button_name:"Выберите файл",
+    }
+  },
   methods:{
     async updatePhoto(e){
-        console.log(25);
+        if (this.button_name=="Выберите файл"){
+            this.button_name="Фото выбрано"
+            console.log(this.button_name)
+        }else{
+            this.button_name="Фото обновлено"
+        }
+        console.log(this.button_name)
         this.$store.dispatch('newPhoto',e);
     }
 
