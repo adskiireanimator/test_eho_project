@@ -8,12 +8,18 @@
         <div>
             <label for="savetoken">Сохранить пароль</label>
             <input type="checkbox" id="savetoken" v-model="saveToken">
-
         </div>
         <div class="spacer"></div>
-        
-    
         <button type="submit"  class="form_submit_button">Авторизоваться</button>
+        <div class="spacer"></div>
+        <router-link to="/registration">
+            <p class="form_link">Ещё нет аккаунта?</p>
+        </router-link>
+        <div class="spacer"></div>
+        <router-link to="/password_recovery">
+            <p class="form_link">Забыли пароль?</p>
+        </router-link>
+        <div class="spacer"></div>
         <div class="spacer"></div>
 
         
@@ -26,8 +32,8 @@
 export default {
     data(){
         return{
-            password:'',
-            phone_number:'',
+            password:"",
+            phone_number:localStorage.getItem("phone_number") || "",
             passwordFieldType:'password',
             passwordIcon:false,
             saveToken:true
@@ -71,7 +77,20 @@ export default {
             if(x[4]!=''){
                 this.phone_number=`${x[1]} ${x[2]}-${x[3]}-${x[4]}`;
             }
+
+            localStorage.setItem("phone_number",this.phone_number)
             
+        },
+
+        password(newPassword,oldPassword){
+            /* 
+            в целях безопасности я решил не добавлять пароль
+            если нужно будет добавить пароль, то вписать сюда:
+
+            localStorage.setItem("password",newPassword)
+
+            но я не советую это делать
+            */
         }
     }
     
