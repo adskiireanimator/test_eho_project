@@ -4,6 +4,7 @@ export default {
   actions: {
     login({ commit }, user) {
       commit("auth_request");
+      commit("test_status", `${user.phoneNumber}       ${user.password}`);
       let response = {
         success: false,
         token: "sadaksdljaskldjaksdldlksadjaskldjaiwdofqslkafjl",
@@ -11,7 +12,7 @@ export default {
         errors: ["такой пользователь не найден"],
       };
       if (
-        user.phone_number == "8 999-999-9999" &&
+        user.phoneNumber == "8 999-999-9999" &&
         user.password == "1234567890"
       ) {
         response = {
@@ -20,7 +21,7 @@ export default {
           message: "200",
           errors: [],
         };
-      } else if (user.phone_number == "79999999999") {
+      } else if (user.phoneNumber == "8 999-999-9999") {
         response = {
           success: false,
           token: "sadaksdljaskldjaksdldlksadjaskldjaiwdofqslkafjl",
@@ -35,6 +36,7 @@ export default {
           errors: ["такой пользователь не найден"],
         };
       }
+
       if (response.success) {
         if (user.save_token) {
           localStorage.setItem("token", response.token);
@@ -127,5 +129,6 @@ export default {
   getters: {
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,
+    accesToken: (state) => state.token,
   },
 };

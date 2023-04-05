@@ -1,0 +1,87 @@
+.main {
+    &_layout {
+        height: 100vh;
+        width: 100vw;
+    }
+
+    &_header {
+        height: 4rem;
+        background-color: #00b380;
+        padding: 1rem 0;
+
+        &_wrapper {
+            display: flex;
+            justify-content: space-between;
+            padding: 0 1rem;
+        }
+
+        &_logo {
+            height: 3rem;
+        }
+        &_icon {
+            font-size: 2.4rem;
+            color: #ffffff;
+            line-height: 3rem;
+
+            @media (min-width: 768px) {
+                display: none;
+            }
+        }
+        &_nav {
+            position: absolute;
+            background-color: #00b380;
+            top: 4rem;
+            left: 0;
+            width: 100%;
+
+            @media (min-width: 768px) {
+                position: relative;
+                top: -1rem;
+                background-color: transparent;
+            }
+        }
+        &_ul {
+            list-style-type: none;
+            max-height: 0px;
+            overflow: hidden;
+            transition: all 0.5s;
+
+            @media (min-width: 768px) {
+                max-height: 4rem;
+                padding: 1rem 0;
+                text-align: right;
+            }
+        }
+
+        &_li {
+            padding: 0 1rem;
+            @media (min-width: 768px) {
+                display: inline-flex;
+                padding-left: 2rem;
+            }
+        }
+
+        &_link {
+            display: inline-block;
+            padding: 1rem;
+            /* Add your custom styles below to change appearance of links */
+            color: #dae1e7;
+            font-size: 1.2rem;
+            text-decoration: none;
+            letter-spacing: 0.05rem;
+
+            &:hover {
+                color: #7ef4d2;
+            }
+        }
+    }
+}
+
+#checkbox {
+    display: none;
+}
+#checkbox:checked ~ nav ul {
+    max-height: 12.5rem;
+    padding: 1rem 0;
+    transition: all 0.5s;
+}

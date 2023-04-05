@@ -52,12 +52,11 @@ export default {
     },
     methods:{
         authorizationHandler(){
-            console.log(this.phone_number);
-            let phone_number = this.phone_number
+            let phoneNumber = this.phoneNumber
             let password = this.password
             let save_token=this.saveToken
             console.log(save_token)
-            this.$store.dispatch('login', { phone_number, password,save_token }).then(() => this.$router.push('/user_profile')).catch(err => console.log(err))
+            this.$store.dispatch('login', { phoneNumber, password,save_token }).then(() => this.$router.push('/user_profile')).catch(err => console.log(err))
         },
         changePassIcon(){
             this.passwordIcon=!this.passwordIcon;

@@ -1,8 +1,9 @@
 <template>
     <div>
         <div id="nav">
-            <router-link to="/">Home</router-link> 
-            <router-link to="/authorization">About</router-link>
+            <p>{{ getName }}</p>
+            <p>{{ getSurname }}</p>
+            <p>{{accesToken}}</p>
             <span v-if="isLoggedIn">
                 <a v-on:click="logout">Logout</a>
             </span>
@@ -15,12 +16,23 @@
   export default {
     computed : {
       isLoggedIn(){
-         return this.$store.getters.isLoggedIn
+         return this.$store.getters.isLoggedIn;
         },
       authStatus(){
-        return this.$store.getters.authStatus
+        return this.$store.getters.authStatus;
+      },
+      accesToken(){
+        return this.$store.getters.accesToken;
+      },
+      getName(){
+        return this.$store.getters.getName;
+      },
+      getPhone(){
+        return this.$store.getters.getPhone;
+      },
+      getSurname(){
+        return this.$store.getters.getSurname;
       }
-
       
       
     
@@ -31,7 +43,7 @@
       },
 
       fetchData(){
-        this.$store.dispatch('fetchData')
+        this.$store.dispatch('fetchData',this.accesToken)
       }
     },
 

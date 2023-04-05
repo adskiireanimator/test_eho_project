@@ -2,7 +2,22 @@ import axios from "axios";
 
 export default {
   actions: {
-    async fetchData(ctx) {
+    async fetchData(ctx, token) {
+      console.log(token, "           sadasdassdasada");
+      let data = {
+        id: 21312213,
+        name: "mishsadaa",
+        surname: "dorodniksadasdaov",
+        phone: "8 800-555-35asdsad35",
+      };
+      if (token == "sadaksdljaskldjaksdldlksadjaskldjaiwdofqslkafjl") {
+        data = {
+          id: 21312,
+          name: "misha",
+          surname: "dorodnikov",
+          phone: "8 800-555-3535",
+        };
+      }
       /*
         axios({
             url: "http://localhost:3000/api/user",
@@ -21,14 +36,30 @@ export default {
               reject(err);
             });
             */
+      ctx.commit("updateData", data);
     },
   },
-  mutations: {},
+  mutations: {
+    updateData(state, data) {
+      state.surname = data.surname;
+      state.name = data.name;
+      state.phone = data.phone;
+    },
+  },
   state: {
     surname: "",
     name: "",
+    phone: "",
   },
   getters: {
-    getName() {},
+    getName: (state) => {
+      return state.name;
+    },
+    getSurname: (state) => {
+      return state.surname;
+    },
+    getPhone: (state) => {
+      return state.phone;
+    },
   },
 };
