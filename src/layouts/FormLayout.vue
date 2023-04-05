@@ -19,7 +19,7 @@ export default {
             return this.$store.getters.currentPhoto;
         },
         photoShow(){
-            return this.$store.getters.refreshPhoto;
+            return this.$store.getters.refreshPhoto && this.$router.currentRoute._value.path=="/registration";
         }
     },
 }

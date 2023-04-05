@@ -20,6 +20,8 @@
       authStatus(){
         return this.$store.getters.authStatus
       }
+
+      
       
     
     },
@@ -32,5 +34,9 @@
         this.$store.dispatch('fetchData')
       }
     },
+
+    async created(){
+      this.fetchData();
+    }
   }
 </script>

@@ -11,11 +11,19 @@ export default {
       };
       await reader.readAsDataURL(files[0]);
     },
+
+    hidePhoto(ctx) {
+      ctx.commit("hidingPhoto");
+    },
   },
   mutations: {
     updatePhoto(state, url) {
       state.photoUrl = url;
       state.photoShow = true;
+    },
+
+    hidingPhoto(state) {
+      state.photoShow = false;
     },
   },
   state: {

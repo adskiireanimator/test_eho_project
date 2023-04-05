@@ -100,6 +100,9 @@ export default {
             но я не советую это делать
             */
         }
+    },
+    created(){
+        this.$store.dispatch('hidePhoto');
     }
     
 }
