@@ -41,17 +41,17 @@
 
 
 export default {
-    data(){
-        return{
-            password:"",
-            phoneNumber:localStorage.getItem("phone_number") || "",
-            passwordFieldType:'password',
-            passwordIcon:false,
-            saveToken:true
+    data() {
+        return {
+            password: "",
+            phoneNumber: localStorage.getItem("phone_number") || "",
+            passwordFieldType: 'password',
+            passwordIcon: false,
+            saveToken: true
         }
     },
-    methods:{
-        authorizationHandler(){
+    methods: {
+        authorizationHandler() {
             let phoneNumber = this.phoneNumber
             let password = this.password
             let save_token=this.saveToken

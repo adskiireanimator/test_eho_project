@@ -45,23 +45,23 @@
 import Uploader from '@/components/Uploader.vue'
 
 export default {
-    data(){
+    data() {
         return{
-            name:localStorage.getItem("name") || "",
-            surname:localStorage.getItem("surname") || "",
-            phoneNumber:localStorage.getItem("phone_number") || "",
-            password:'',
-            passwordFieldType:'password',
-            passwordIcon:false,
-            passwordPhrase:'Показать пароль'
+            name: localStorage.getItem("name") || "",
+            surname: localStorage.getItem("surname") || "",
+            phoneNumber: localStorage.getItem("phone_number") || "",
+            password: '',
+            passwordFieldType: 'password',
+            passwordIcon: false,
+            passwordPhrase: 'Показать пароль'
         }
     },
-    methods:{
-        changePassIcon(){
+    methods: {
+        changePassIcon() {
             this.passwordIcon=!this.passwordIcon;
             this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
         },
-        registerHandler(){
+        registerHandler() {
             let data = {
                 name: this.name,
                 phone_number: this.phone_number,

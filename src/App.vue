@@ -8,13 +8,13 @@
 import FormLayout from '@/layouts/FormLayout.vue' 
 import MainLayout from '@/layouts/MainLayout.vue' 
 export default {
-  computed:{
-    layout(){
+  computed: {
+    layout() {
       console.log(this.$route.meta);
-      return(this.$route.meta.layout||'Main')+'-layout';
+      return (this.$route.meta.layout||'Main') + '-layout';
     }
   },
-  components:{
+  components: {
     FormLayout,
     MainLayout
   }

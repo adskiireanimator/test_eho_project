@@ -20,18 +20,16 @@ export default {
     }
   },
   methods:{
-    async updatePhoto(e){
-        if (this.button_name=="Выберите файл"){
+    async updatePhoto(e) {
+        if (this.button_name=="Выберите файл") {
             this.button_name="Фото выбрано"
             console.log(this.button_name)
-        }else{
+        } else {
             this.button_name="Фото обновлено"
         }
         console.log(this.button_name)
         this.$store.dispatch('newPhoto',e);
     }
-
-  }
-  
+  } 
 }
 </script>

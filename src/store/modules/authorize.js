@@ -106,6 +106,9 @@ export default {
       state.status = "loading";
     },
     auth_success(state, token, user) {
+      localStorage.removeItem("name");
+      localStorage.removeItem("surname");
+      localStorage.removeItem("phone_number");
       state.status = "success";
       state.token = token;
       state.user = user;

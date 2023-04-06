@@ -13,8 +13,8 @@ export default {
       if (token == "sadaksdljaskldjaksdldlksadjaskldjaiwdofqslkafjl") {
         data = {
           id: 21312,
-          name: "misha",
-          surname: "dorodnikov",
+          name: "Misha",
+          surname: "Dorodnikov",
           phone: "8 800-555-3535",
         };
       }
@@ -24,15 +24,11 @@ export default {
             method: "GET",
           })
             .then((resp) => {
-              const id = resp.data.id;
-              const name = resp.data.name;
-              const surname= resp.data.surname;
-              const phone=resp.data.surname
+              ctx.commit("updateData", resp.data);
               resolve(resp);
             })
             .catch((err) => {
               commit("auth_error");
-              localStorage.removeItem("token");
               reject(err);
             });
             */
@@ -41,12 +37,14 @@ export default {
   },
   mutations: {
     updateData(state, data) {
+      state.id = data.id;
       state.surname = data.surname;
       state.name = data.name;
       state.phone = data.phone;
     },
   },
   state: {
+    id: "",
     surname: "",
     name: "",
     phone: "",
