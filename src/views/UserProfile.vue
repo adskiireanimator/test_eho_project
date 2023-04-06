@@ -1,13 +1,26 @@
 <template>
     <div>
         <div id="nav">
-            <p>{{ getName }}</p>
-            <p>{{ getSurname }}</p>
-            <p>{{accesToken}}</p>
-            <span v-if="isLoggedIn">
-                <a v-on:click="logout">Logout</a>
-            </span>
-            <p>{{ authStatus }}</p>
+          <div class="">
+            <div v-if="isLoggedIn" class="message_single_container">
+                <p class="message_text">{{ getName }} {{ getSurname }}, добро пожаловать</p>
+                <div class="spacer"></div>
+                <button v-on:click="logout" class="message_button">Выйти из аккаунта</button>
+                <div class="spacer"></div>
+            </div>
+            <div v-else>
+              <div class="message_single_container">
+                <p class="message_text">
+                  Пожалуйста, войдите в аккаунт
+                </p>
+                <div class="spacer"></div>
+                <router-link to="/authorization">
+                  <p class="message_link">Авторизоваться</p>
+                </router-link>
+                <div class="spacer"></div>
+              </div>
+            </div>
+          </div>
         </div>
     </div>
 </template>
@@ -49,6 +62,7 @@
 
     async created(){
       this.fetchData();
-    }
+    },
+
   }
 </script>
