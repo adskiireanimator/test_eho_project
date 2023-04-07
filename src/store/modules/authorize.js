@@ -130,7 +130,7 @@ export default {
     errors: [],
   },
   getters: {
-    isLoggedIn: (state) => !!state.token,
+    isLoggedIn: (state) => localStorage.getItem("token") || !!state.token,
     authStatus: (state) => state.status,
     accesToken: (state) => state.token,
     getAutorizationErrors: (state) => state.errors,

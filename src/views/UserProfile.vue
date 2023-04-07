@@ -27,15 +27,17 @@
 
 <script>
   export default {
+    data(){
+      return{
+        accesToken:localStorage.getItem('token')||''
+      }
+    },
     computed : {
       isLoggedIn(){
          return this.$store.getters.isLoggedIn;
         },
       authStatus(){
         return this.$store.getters.authStatus;
-      },
-      accesToken(){
-        return this.$store.getters.accesToken;
       },
       getName(){
         return this.$store.getters.getName;

@@ -72,7 +72,7 @@ export default {
                 password: this.password,
             };
             
-            this.$store.dispatch('register', data).then(() => this.$router.push('/')).catch(err => console.log(err))
+            this.$store.dispatch('register', data).then(() => this.$router.push('/user_profile')).catch(err => console.log(err))
         },
         
     },
