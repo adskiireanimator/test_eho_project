@@ -14,8 +14,8 @@
 <script>
 export default {
   name: 'Uploader',
-  data(){
-    return{
+  data() {
+    return {
         button_name:"Выберите файл",
     }
   },

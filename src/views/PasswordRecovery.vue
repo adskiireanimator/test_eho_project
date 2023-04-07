@@ -2,10 +2,12 @@
     <form class="form" v-on:submit.prevent="recovery_handler">
         <p class="form_text">Востановление пароля</p>
         <div class="spacer"></div>
-        <input type="text" name="" id="" class="form_input" v-model="phoneNumber">
+        <input type="text" name="" id="" class="form_input" v-model="phoneNumber" placeholder="8 XXX-xxx-xxxx">
         <div class="spacer"></div>
         <button class="form_submit_button" v-on:click="recovery_handler">отправить код</button>
         <div class="spacer"></div>
+        <button class="form_submit_button" v-on:click="showCodeCheck=true">dsadasdasdadadsad</button>
+        <CodeChecker v-if="showCodeCheck" />
         <router-link to="/authorization">
             <p class="form_link">Вспомнил пароль!</p>
         </router-link>
@@ -20,19 +22,33 @@
 </template>
 
 <script>
+
+import CodeChecker from '@/components/PhoneCodeChecker'
+
 export default {
     data() {
         return {
             phoneNumber: localStorage.getItem('phone_number')||'',
+            showCodeCheck:false
+
+        }
+    },
+    computed:{
+        codeState(){
+             return this.$store.getters.codeState;
+        },
+        getRecoveryErrors(){
+            return this.$store.getters.getRecoveryErrors;
         }
     },
     methods: {
         recovery_handler(){
 
+            this.$store.dispatch('startRecovery', this.phoneNumber);
         }
     },
     watch: {
-        phoneNumber(newPhone,oldPhone) {
+        phoneNumber(newPhone) {
             if (newPhone[0]=='+' && newPhone[1]=='7') {
                 newPhone='8';
             }            
@@ -53,6 +69,9 @@ export default {
             localStorage.setItem("phone_number", this.phoneNumber)
             
         },
+    },
+    components:{
+        CodeChecker
     }
 }
 </script>

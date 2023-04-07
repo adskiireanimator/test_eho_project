@@ -53,7 +53,11 @@ export default {
             password: '',
             passwordFieldType: 'password',
             passwordIcon: false,
-            passwordPhrase: 'Показать пароль'
+        }
+    },
+    computed:{
+        registrationErrors(){
+            return this.$store.getters.getAutorizationErrors;
         }
     },
     methods: {

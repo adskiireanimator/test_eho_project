@@ -4,7 +4,6 @@ export default {
   actions: {
     login({ commit }, user) {
       commit("auth_request");
-      commit("test_status", `${user.phoneNumber}       ${user.password}`);
       let response = {
         success: false,
         token: "sadaksdljaskldjaksdldlksadjaskldjaiwdofqslkafjl",
@@ -19,19 +18,16 @@ export default {
           success: true,
           token: "sadaksdljaskldjaksdldlksadjaskldjaiwdofqslkafjl",
           message: "200",
-          errors: [],
         };
       } else if (user.phoneNumber == "8 999-999-9999") {
         response = {
           success: false,
-          token: "sadaksdljaskldjaksdldlksadjaskldjaiwdofqslkafjl",
           message: "401",
           errors: ["Пароль не подходит"],
         };
       } else {
         response = {
           success: false,
-          token: "sadaksdljaskldjaksdldlksadjaskldjaiwdofqslkafjl",
           message: "404",
           errors: ["такой пользователь не найден"],
         };
@@ -42,8 +38,10 @@ export default {
           localStorage.setItem("token", response.token);
         }
         commit("auth_success", response.token, user);
-      } else {
-        // errors from server handler
+      }
+
+      if (response.errors) {
+        commit("login_error", response.errors);
       }
 
       /*
@@ -96,7 +94,6 @@ export default {
     logout({ commit }) {
       return new Promise((resolve, reject) => {
         commit("logout");
-        localStorage.removeItem("token");
         resolve();
       });
     },
@@ -113,10 +110,12 @@ export default {
       state.token = token;
       state.user = user;
     },
-    auth_error(state) {
+    login_error(state, errors) {
       state.status = "error";
+      state.errors = errors;
     },
     logout(state) {
+      localStorage.removeItem("token");
       state.status = "";
       state.token = "";
     },
@@ -128,10 +127,12 @@ export default {
     status: "",
     user: {},
     token: localStorage.getItem("token") || "",
+    errors: [],
   },
   getters: {
     isLoggedIn: (state) => !!state.token,
     authStatus: (state) => state.status,
     accesToken: (state) => state.token,
+    getAutorizationErrors: (state) => state.errors,
   },
 };
