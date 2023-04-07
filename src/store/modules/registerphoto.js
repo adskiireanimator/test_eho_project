@@ -31,11 +31,7 @@ export default {
     photoShow: false,
   },
   getters: {
-    currentPhoto(state) {
-      return state.photoUrl;
-    },
-    refreshPhoto(state) {
-      return state.photoShow;
-    },
+    currentPhoto: (state) => state.photoUrl,
+    refreshPhoto: (state) => state.photoShow,
   },
 };

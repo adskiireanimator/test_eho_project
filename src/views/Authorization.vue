@@ -50,13 +50,18 @@ export default {
             saveToken: true
         }
     },
+    computed:{
+        authStatus(){
+            return this.$store.getters.authStatus;
+        }
+    },
     methods: {
         authorizationHandler() {
             let phoneNumber = this.phoneNumber
             let password = this.password
             let save_token=this.saveToken
             console.log(save_token)
-            this.$store.dispatch('login', { phoneNumber, password,save_token }).then(() => this.$router.push('/user_profile')).catch(err => console.log(err))
+            this.$store.dispatch('login', { phoneNumber, password,save_token }).catch(err => console.log(err))
         },
         changePassIcon(){
             this.passwordIcon=!this.passwordIcon;
@@ -65,9 +70,15 @@ export default {
     },
     watch:{
         phoneNumber(newPhone,oldPhone){
-            if(newPhone[0]=='+' && newPhone[1]=='7'){
-                newPhone='8';
-            }
+            if (newPhone[0]=='+' && newPhone[1]=='7') {
+                let correctPhone='8';
+                if (newPhone.length>2){
+                    for(let i=2;i<newPhone.length;i++){
+                        correctPhone=correctPhone+newPhone[i]
+                    }
+                }
+                newPhone=correctPhone;
+            }  
             
             let x = newPhone.replace(/\D/g, "").match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
             
@@ -98,6 +109,25 @@ export default {
 
             но я не советую это делать
             */
+        },
+        authStatus(status){
+            if(status=="success"){
+                this.$router.push('/user_profile');
+            }else if(status=="loading"){
+            /*
+                Здесь добавлю disabled кнопки для доп задания
+
+                без vuelidate глупо пока что лезть в disabled 
+            */
+            }else if(status=="error"){
+                /*
+    
+                без vuelidate глупо пока что лезть в disabled 
+
+                здесь будет обработка ошибок по типу не подходит пароль и т.д
+
+                */
+            }
         }
     },
     created(){

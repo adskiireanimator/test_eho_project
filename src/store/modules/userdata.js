@@ -50,14 +50,8 @@ export default {
     phone: "",
   },
   getters: {
-    getName: (state) => {
-      return state.name;
-    },
-    getSurname: (state) => {
-      return state.surname;
-    },
-    getPhone: (state) => {
-      return state.phone;
-    },
+    getName: (state) => state.name,
+    getSurname: (state) => state.surname,
+    getPhone: (state) => state.phone,
   },
 };

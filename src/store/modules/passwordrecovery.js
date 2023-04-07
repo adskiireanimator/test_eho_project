@@ -62,17 +62,17 @@ export default {
         ctx.commit("errors_exists", response.errors);
       }
       /*
-      return new Promise((resolve, reject) => {
+      return new Promise((resolve, data) => {
         axios({
-          url: "http://localhost:3000/api/user/forgot-start",
-          phone: phoneNumber,
+          url: "http://localhost:3000/api/user/forgot-end",
+          data: data,
           method: "POST",
         })
           .then((resp) => {
             const success = resp.data.success;
             const message = resp.data.message;
             if (success) {
-              commit("phone_exists");
+              commit("code_correct", resp.data.token);
             }
             if (resp.data.errors) {
               commit("errors_exists", resp.data.errors);
@@ -85,6 +85,17 @@ export default {
           });
       });*/
     },
+
+    cancelCodeReceipt(ctx) {
+      ctx.commit("abbolish_code");
+    },
+    sendNewCode(ctx) {
+      /*  
+      здесь нужно реализовать отправку на сервер сигнала об обновлении кода.
+      у меня не дан пример в апи потому не сделал
+      
+      */
+    },
   },
   mutations: {
     phone_exists(state) {
@@ -96,6 +107,9 @@ export default {
     },
     errors_exists(state, errors) {
       state.errors = errors;
+    },
+    abbolish_code(state) {
+      state.codeState = false;
     },
   },
   state: {

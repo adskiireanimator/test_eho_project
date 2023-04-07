@@ -64,9 +64,14 @@ export default {
     },
     watch: {
         phoneNumber(newPhone) {
-            console.log(this.codeState)
             if (newPhone[0]=='+' && newPhone[1]=='7') {
-                newPhone='8';
+                let correctPhone='8';
+                if (newPhone.length>2){
+                    for(let i=2;i<newPhone.length;i++){
+                        correctPhone=correctPhone+newPhone[i]
+                    }
+                }
+                newPhone=correctPhone;
             }            
             const x = newPhone.replace(/\D/g, "").match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
 

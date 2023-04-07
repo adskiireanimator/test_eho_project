@@ -37,55 +37,65 @@ export default {
         if (user.save_token) {
           localStorage.setItem("token", response.token);
         }
-        commit("auth_success", response.token, user);
+        commit("auth_success", response.token);
       }
 
       if (response.errors) {
         commit("login_error", response.errors);
       }
-
       /*
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
           url: "http://localhost:3000/api/auth/login",
-          data: user,
+          data: { phone: user.phoneNumber, password: user.password },
           method: "POST",
         })
           .then((resp) => {
-            const token = resp.data.token;
-            const user = resp.data.user;
-            localStorage.setItem("token", token);
-            commit("auth_success", token, user);
+            const success = resp.data.success;
+            const message = resp.data.message;
+
+            if (success) {
+              commit("auth_success", resp.data.token);
+              if (user.save_token) {
+                localStorage.setItem("token", token);
+              }
+            }
+            if (resp.data.errors) {
+              commit("login_error", resp.data.errors);
+            }
+
             resolve(resp);
           })
           .catch((err) => {
-            commit("auth_error");
-            localStorage.removeItem("token");
+            commit("login_error", ["ошибка в соединении"]);
             reject(err);
           });
-      });
-      */
+      });*/
     },
 
     register({ commit }, user) {
       return new Promise((resolve, reject) => {
         commit("auth_request");
         axios({
-          url: "http://localhost:3000/register",
+          url: "http://localhost:3000/api/user/registration",
           data: user,
           method: "POST",
         })
           .then((resp) => {
-            const token = resp.data.token;
-            const user = resp.data.user;
-            localStorage.setItem("token", token);
-            commit("auth_success", token, user);
+            const success = resp.data.success;
+            const message = resp.data.message;
+
+            if (success) {
+              commit("auth_success", resp.data.token);
+            }
+            if (resp.data.errors) {
+              commit("login_error", resp.data.errors);
+            }
             resolve(resp);
           })
           .catch((err) => {
-            commit("auth_error", err);
-            localStorage.removeItem("token");
+            commit("login_error", ["ошибка в соединении"]);
             reject(err);
           });
       });
@@ -102,13 +112,12 @@ export default {
     auth_request(state) {
       state.status = "loading";
     },
-    auth_success(state, token, user) {
+    auth_success(state, token) {
       localStorage.removeItem("name");
       localStorage.removeItem("surname");
       localStorage.removeItem("phone_number");
       state.status = "success";
       state.token = token;
-      state.user = user;
     },
     login_error(state, errors) {
       state.status = "error";
@@ -125,7 +134,6 @@ export default {
   },
   state: {
     status: "",
-    user: {},
     token: localStorage.getItem("token") || "",
     errors: [],
   },

@@ -58,6 +58,9 @@ export default {
     computed:{
         registrationErrors(){
             return this.$store.getters.getAutorizationErrors;
+        },
+        authStatus(){
+            return this.$store.getters.authStatus;
         }
     },
     methods: {
@@ -66,21 +69,27 @@ export default {
             this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
         },
         registerHandler() {
-            let data = {
-                name: this.name,
-                phone_number: this.phone_number,
-                password: this.password,
-            };
+                let first_name= this.name;
+                let last_name=this.surname;
+                let phone= this.phoneNumber;
+                let password= this.password;
             
-            this.$store.dispatch('register', data).then(() => this.$router.push('/user_profile')).catch(err => console.log(err))
+            
+            this.$store.dispatch('register', {first_name,last_name,phone,password}).catch(err => console.log(err))
         },
         
     },
     watch:{
         phoneNumber(newPhone,oldPhone){
-            if(newPhone[0]=='+' && newPhone[1]=='7'){
-                newPhone='8';
-            }            
+            if (newPhone[0]=='+' && newPhone[1]=='7') {
+                let correctPhone='8';
+                if (newPhone.length>2){
+                    for(let i=2;i<newPhone.length;i++){
+                        correctPhone=correctPhone+newPhone[i]
+                    }
+                }
+                newPhone=correctPhone;
+            }           
             const x = newPhone.replace(/\D/g, "").match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
 
             if(x[1]!=''){
@@ -115,6 +124,26 @@ export default {
 
             но я не советую это делать
             */
+        },
+
+        authStatus(status){
+            if(status=="success"){
+                this.$router.push('/user_profile');
+            }else if(status=="loading"){
+            /*
+                Здесь добавлю disabled кнопки для доп задания
+
+                без vuelidate глупо пока что лезть в disabled 
+            */
+            }else if(status=="error"){
+                /*
+    
+                без vuelidate глупо пока что лезть в disabled 
+
+                здесь будет обработка ошибок по типу не подходит пароль и т.д
+
+                */
+            }
         }
     },
     components:{
