@@ -4,13 +4,17 @@
 
         <div class="spacer"></div>
 
-        <input type="text" class="form_input" placeholder="Имя" name="name" v-model="name">
+        <input type="text" class="form_input" placeholder="Имя" name="name" v-model="name" v-bind:class="{invalid_input:nameError.incorrectName}">
+        <label v-if="nameError.incorrectName" class="form_label">Поле дожно быть заполнено</label>
 
-        <input type="text" class="form_input" placeholder="Фамилия" name="surname" v-model="surname">
+        <input type="text" class="form_input" placeholder="Фамилия" name="surname" v-model="surname" v-bind:class="{invalid_input:nameError.incorrectSurname}">
+        <label v-if="nameError.incorrectSurname" class="form_label">Поле должно быть заполнено</label>
 
-        <input type="text" class="form_input" placeholder="8 XXX-xxx-xxxx" name="phone" v-model="phoneNumber">
+        <input type="text" class="form_input" placeholder="8 XXX-xxx-xxxx" name="phone" v-model="phoneNumber"  v-bind:class="{invalid_input:phoneError.incorrectPhone}">
+        <label v-if="phoneError.incorrectPhone" class="form_label">{{phoneError.phoneLabel}}</label>
         
-        <input class="form_input" placeholder="Пароль" v-model="password" v-bind:type="passwordFieldType">
+        <input class="form_input" placeholder="Пароль" v-model="password" v-bind:type="passwordFieldType"  v-bind:class="{invalid_input:passwordError.incorrectPassword}">
+        <label v-if="passwordError.incorrectPassword" class="form_label">{{passwordError.passwordLabel}}</label>
         <div href="#" class="passwordControl" v-bind:class="{passwordControl_View:passwordIcon}" v-on:click="changePassIcon"></div>
         
         <div class="spacer"></div>
@@ -20,6 +24,7 @@
         <button type="submit"  class="form_submit_button">Регистрация</button>
 
         <div class="spacer"></div>
+
         <div style="width:80%;">
             <label class="form_checkbox_label">
                 <input type="checkbox">
@@ -53,6 +58,18 @@ export default {
             password: '',
             passwordFieldType: 'password',
             passwordIcon: false,
+            passwordError:{
+                incorrectPassword:false,
+                passwordLabel:"Поле дожно быть заполнено",
+            },
+            phoneError:{
+                incorrectPhone:false,
+                phoneLabel:"Поле дожно быть заполнено"
+            },
+            nameError:{
+                incorrectName:false,
+                incorrectSurname:false
+            }
         }
     },
     computed:{
@@ -69,53 +86,85 @@ export default {
             this.passwordFieldType = this.passwordFieldType === "password" ? "text" : "password";
         },
         registerHandler() {
-                let first_name= this.name;
-                let last_name=this.surname;
-                let phone= this.phoneNumber;
-                let password= this.password;
-            
-            
-            this.$store.dispatch('register', {first_name,last_name,phone,password}).catch(err => console.log(err))
+            let first_name= this.name;
+            let last_name=this.surname;
+            let phone= this.phoneNumber;
+            let password= this.password;
+
+            this.nameError.incorrectName=!first_name;
+            this.nameError.incorrectSurname=!last_name;
+            this.phoneError.incorrectPhone=!phone;
+            this.passwordError.incorrectPassword=!password;
+
+            this.phoneError.phoneLabel="Поле телефона должно быть заполнено";
+            this.passwordError.passwordLabel="Поле пароль должно быть заполнено"
+
+            if(!this.nameError.incorrectName || !this.nameError.incorrectSurname || !this.phoneError.incorrectPhone || !this.passwordError.incorrectPassword || this.authStatus=='loading' ){
+                this.$store.dispatch('register', {first_name,last_name,phone,password}).catch(err => console.log(err))
+            }
         },
         
     },
     watch:{
         phoneNumber(newPhone,oldPhone){
-            if (newPhone[0]=='+' && newPhone[1]=='7') {
-                let correctPhone='8';
-                if (newPhone.length>2){
-                    for(let i=2;i<newPhone.length;i++){
-                        correctPhone=correctPhone+newPhone[i]
-                    }
-                }
-                newPhone=correctPhone;
-            }           
-            const x = newPhone.replace(/\D/g, "").match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
+            const correctsym=['+','1','2','3','4','5','6','7','8','9','0'];
+            if (newPhone.length==15) this.phoneNumber=oldPhone;
 
-            if(x[1]!=''){
-                this.phoneNumber=`${x[1]}`;
+
+            if (newPhone[newPhone.length-1] in correctsym){
+                    if (newPhone[0]=='+' && newPhone[1]=='7') {
+                        let correctPhone='8';
+                            if (newPhone.length>2){
+                                for(let i=2;i<newPhone.length;i++){
+                                    correctPhone=correctPhone+newPhone[i]
+                                }
+                            }
+                            newPhone=correctPhone;
+                    }  
+                
+                let x = newPhone.replace(/\D/g, "").match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
+                
+                
+
+                if(x[1]!=''){
+                    this.phoneNumber=`${x[1]}`;
+                }
+                if(x[2]!=''){
+                    this.phoneNumber=`${x[1]} ${x[2]}`;
+                }
+                if(x[3]!=''){
+                    this.phoneNumber=`${x[1]} ${x[2]}-${x[3]}`;
+                }
+                if(x[4]!=''){
+                    this.phoneNumber=`${x[1]} ${x[2]}-${x[3]}-${x[4]}`;
+                }
+                localStorage.setItem("phone_number",this.phoneNumber);
+
+
+                if(this.phoneNumber.length<14){
+                    this.phoneError.incorrectPhone=true;
+                    this.phoneError.phoneLabel="Введите корректный телефон";
+                }else{
+                    this.phoneError.incorrectPhone=false;
+                }
+            }else{
+                this.phoneError.incorrectPhone=true;
+                this.phoneError.phoneLabel="Вводите числа";
             }
-            if(x[2]!=''){
-                this.phoneNumber=`${x[1]} ${x[2]}`;
-            }
-            if(x[3]!=''){
-                this.phoneNumber=`${x[1]} ${x[2]}-${x[3]}`;
-            }
-            if(x[4]!=''){
-                this.phoneNumber=`${x[1]} ${x[2]}-${x[3]}-${x[4]}`;
-            }
-            localStorage.setItem("phone_number",this.phoneNumber)
             
         },
 
         name(newName,oldName){
+            this.nameError.incorrectName=false;
             localStorage.setItem("name",newName);
         },
 
         surname(newSurname,oldSurname){
+            this.nameError.incorrectSurname=false;
             localStorage.setItem("surname",newSurname);
         },
         password(newPassword,oldPassword){
+            this.passwordError.incorrectPassword=false;
             /* 
             в целях безопасности я решил не добавлять пароль 
             если нужно будет добавить пароль, то вписать сюда:
@@ -136,13 +185,12 @@ export default {
                 без vuelidate глупо пока что лезть в disabled 
             */
             }else if(status=="error"){
-                /*
-    
-                без vuelidate глупо пока что лезть в disabled 
-
-                здесь будет обработка ошибок по типу не подходит пароль и т.д
-
-                */
+                for(let error of this.authorizationErrors){
+                    if (error=="for example password error"){
+                        this.passwordError.incorrectPassword=true;
+                        this.passwordError.passwordLabel=error;
+                    }
+                }
             }
         }
     },

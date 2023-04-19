@@ -20,7 +20,7 @@
             <div class="spacer"></div>
 
             <button v-on:click="cancelCodeRecovering" class="modal_form_canselbutton">отмена</button>
-            
+
             <div class="spacer"></div>
             <div class="spacer"></div>
         </form>
@@ -63,6 +63,8 @@ export default {
         this.$store.dispatch('cancelCodeReceipt')
     },
     sendNewCode(){
+        this.refreshCodeState=false;
+        this.startTimer();
         this.$store.dispatch('sendNewCode')
     }
 

@@ -4,10 +4,14 @@
 
         <div class="spacer"></div>
 
-        <input type="text" class="form_input" placeholder="8 XXX-xxx-xxxx" name="phone" v-model="phoneNumber">
+        <input type="text" class="form_input" placeholder="8 XXX-xxx-xxxx" name="phone" v-model="phoneNumber" v-bind:class="{invalid_input:phoneError.incorrectPhone}">
+        <label v-if="phoneError.incorrectPhone" class="form_label">{{phoneError.phoneLabel}}</label>
 
-        <input class="form_input" placeholder="Пароль" v-model="password" v-bind:type="passwordFieldType" >
+        <input class="form_input" placeholder="Пароль" v-model="password" v-bind:type="passwordFieldType" v-bind:class="{invalid_input:passwordError.incorrectPassword}">
+        <label v-if="passwordError.incorrectPassword" class="form_label">{{passwordError.passwordLabel}}</label>
         <div href="#" class="passwordControl" v-bind:class="{passwordControl_View:passwordIcon}" v-on:click="changePassIcon"></div>
+        
+        <div class="spacer"></div>
 
         <label class="form_checkbox_label">
             <input type="checkbox" v-model="saveToken">
@@ -47,21 +51,41 @@ export default {
             phoneNumber: localStorage.getItem("phone_number") || "",
             passwordFieldType: 'password',
             passwordIcon: false,
-            saveToken: true
+            saveToken: true,
+            passwordError:{
+                incorrectPassword:false,
+                passwordLabel:'',
+            },
+            phoneError:{
+                incorrectPhone:false,
+                phoneLabel:''
+            },
         }
     },
     computed:{
         authStatus(){
             return this.$store.getters.authStatus;
+        },
+        authorizationErrors(){
+            return this.$store.getters.getAutorizationErrors;
         }
     },
     methods: {
         authorizationHandler() {
-            let phoneNumber = this.phoneNumber
-            let password = this.password
-            let save_token=this.saveToken
-            console.log(save_token)
-            this.$store.dispatch('login', { phoneNumber, password,save_token }).catch(err => console.log(err))
+            this.passwordError.incorrectPassword=!this.password;
+            this.passwordError.passwordLabel="Поле пароль должно быть заполнено"
+
+            this.phoneError.incorrectPhone=!this.phoneNumber;
+            this.phoneError.phoneLabel="Поле телефона должно быть заполнено";
+            
+            if(this.passwordError.incorrectPassword || this.phoneError.incorrectPhone || this.authStatus=='loading'){
+
+            }else{
+                let phoneNumber = this.phoneNumber;
+                let password = this.password;
+                let save_token=this.saveToken;
+                this.$store.dispatch('login', { phoneNumber, password,save_token }).catch(err => console.log(err));
+            }
         },
         changePassIcon(){
             this.passwordIcon=!this.passwordIcon;
@@ -70,37 +94,55 @@ export default {
     },
     watch:{
         phoneNumber(newPhone,oldPhone){
-            if (newPhone[0]=='+' && newPhone[1]=='7') {
-                let correctPhone='8';
-                if (newPhone.length>2){
-                    for(let i=2;i<newPhone.length;i++){
-                        correctPhone=correctPhone+newPhone[i]
-                    }
-                }
-                newPhone=correctPhone;
-            }  
-            
-            let x = newPhone.replace(/\D/g, "").match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
-            
-            
+            const correctsym=['+','1','2','3','4','5','6','7','8','9','0'];
+            if (newPhone.length==15) this.phoneNumber=oldPhone;
 
-            if(x[1]!=''){
-                this.phoneNumber=`${x[1]}`;
+
+            if (newPhone[newPhone.length-1] in correctsym){
+                    if (newPhone[0]=='+' && newPhone[1]=='7') {
+                        let correctPhone='8';
+                            if (newPhone.length>2){
+                                for(let i=2;i<newPhone.length;i++){
+                                    correctPhone=correctPhone+newPhone[i]
+                                }
+                            }
+                            newPhone=correctPhone;
+                    }  
+                
+                let x = newPhone.replace(/\D/g, "").match(/(\d{0,1})(\d{0,3})(\d{0,3})(\d{0,4})/);
+                
+                
+
+                if(x[1]!=''){
+                    this.phoneNumber=`${x[1]}`;
+                }
+                if(x[2]!=''){
+                    this.phoneNumber=`${x[1]} ${x[2]}`;
+                }
+                if(x[3]!=''){
+                    this.phoneNumber=`${x[1]} ${x[2]}-${x[3]}`;
+                }
+                if(x[4]!=''){
+                    this.phoneNumber=`${x[1]} ${x[2]}-${x[3]}-${x[4]}`;
+                }
+                localStorage.setItem("phone_number",this.phoneNumber);
+
+
+                if(this.phoneNumber.length<14){
+                    this.phoneError.incorrectPhone=true;
+                    this.phoneError.phoneLabel="Введите корректный телефон";
+                }else{
+                    this.phoneError.incorrectPhone=false;
+                }
+            }else{
+                this.phoneError.incorrectPhone=true;
+                this.phoneError.phoneLabel="Вводите числа";
             }
-            if(x[2]!=''){
-                this.phoneNumber=`${x[1]} ${x[2]}`;
-            }
-            if(x[3]!=''){
-                this.phoneNumber=`${x[1]} ${x[2]}-${x[3]}`;
-            }
-            if(x[4]!=''){
-                this.phoneNumber=`${x[1]} ${x[2]}-${x[3]}-${x[4]}`;
-            }
-            localStorage.setItem("phone_number",this.phoneNumber)
-            
         },
 
         password(newPassword,oldPassword){
+            this.passwordError.incorrectPassword=false;
+
             /* 
             в целях безопасности я решил не добавлять пароль
             если нужно будет добавить пароль, то вписать сюда:
@@ -120,13 +162,12 @@ export default {
                 без vuelidate глупо пока что лезть в disabled 
             */
             }else if(status=="error"){
-                /*
-    
-                без vuelidate глупо пока что лезть в disabled 
-
-                здесь будет обработка ошибок по типу не подходит пароль и т.д
-
-                */
+                for(let error of this.authorizationErrors){
+                    if (error=="for example password error"){
+                        this.passwordError.incorrectPassword=true;
+                        this.passwordError.passwordLabel=error;
+                    }
+                }
             }
         }
     },

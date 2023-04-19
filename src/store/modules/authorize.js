@@ -124,6 +124,7 @@ export default {
       state.errors = errors;
     },
     logout(state) {
+      sessionStorage.removeItem("token");
       localStorage.removeItem("token");
       state.status = "";
       state.token = "";

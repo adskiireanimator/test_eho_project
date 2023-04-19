@@ -14,3 +14,16 @@ a {
 .spacer {
     flex: 1 1 0%;
 }
+
+.invalid_input {
+    background-color: #ec98ab;
+    border-color: rgb(224 36 3);
+
+    &:hover {
+        background-color: rgb(251 213 213);
+    }
+
+    &:focus {
+        background-color: rgb(251 213 213);
+    }
+}
